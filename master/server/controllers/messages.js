@@ -5,9 +5,7 @@ const addMessage = (req, res) => {
 
     MESSAGES_HISTORY.push(message);
 
-    res.status(201).json({
-        "message": message
-    });
+    res.status(201).json({"message": message});
 }
 
 const listMessages = (req, res) => {
