@@ -2,7 +2,7 @@ const express = require('express');
 const messagesRouter = require('./routes/messages');
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
 const host = process.env.HOST ||'0.0.0.0';
 
 app.use(express.json());
