@@ -10,16 +10,37 @@ services:
       - ./master/server:/usr/src/app
     networks:
       - app-network
+    command: /usr/src/app/node_modules/.bin/nodemon -L app.js
 
   secondary-server:
     build:
       context: secondary/server
       dockerfile: Dockerfile
+    deploy:
+      mode: replicated
+      replicas: 2
     restart: unless-stopped
     ports:
-      - "3001:3001"
+      - "3001-3002:3000"
     volumes:
       - ./secondary/server:/usr/src/app
+    networks:
+      - app-network
+    command: npm run dev
+
+  service-discovery:
+    # The official v2 Traefik docker image
+    image: traefik:v2.10
+    # Enables the web UI and tells Traefik to listen to docker
+    command: --api.insecure=true --providers.docker
+    ports:
+      # The HTTP port
+#      - "80:80"
+      # The Web UI (enabled by --api.insecure=true)
+      - "8080:8080"
+    volumes:
+      # So that Traefik can listen to the Docker events
+      - /var/run/docker.sock:/var/run/docker.sock
     networks:
       - app-network
 
