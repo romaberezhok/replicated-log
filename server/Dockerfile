@@ -1,7 +1,5 @@
 FROM node:18-alpine
 
-ENV NODE_TYPE=MASTER
-
 WORKDIR /usr/src/app
 
 COPY package*.json ./
@@ -9,6 +7,8 @@ COPY package*.json ./
 RUN npm install
 
 COPY . .
+
+ENV NODE_TYPE=MASTER
 
 EXPOSE 3000
 
