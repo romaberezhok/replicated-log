@@ -5,7 +5,12 @@ export function MessagesHistory({ messagesHistory }) {
         <ul>
             {
                 messagesHistory.map((message) => {
-                    return <MessageStatus {...message} key={message.id}/>
+                    return (
+                        <MessageStatus
+                            {...message}
+                            key={message.id}
+                        />
+                    )
                 })
             }
         </ul>
