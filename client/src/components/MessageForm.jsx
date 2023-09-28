@@ -14,7 +14,7 @@ export function MessageForm({ addMessageToHistory }) {
     }
 
     return (
-        <form className="row justify-content-center align-content-center" onSubmit={ handleSubmit } style={{height: '60vh'}}>
+        <form className="input-form row justify-content-center align-content-center" onSubmit={ handleSubmit }>
             <div className="col-8">
                 <div className="d-flex justify-content-center">
                     <input
@@ -24,7 +24,7 @@ export function MessageForm({ addMessageToHistory }) {
                         value={message}
                         onChange={(e) => setMessage(e.target.value)}
                     />
-                    <button type="submit" className="btn btn-primary mx-1 px-5">Submit</button>
+                    <button type="submit" className="input-btn btn btn-primary mx-1 px-5">Submit</button>
                 </div>
             </div>
         </form>

@@ -5,7 +5,7 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./client:/usr/src/app
+      - ./client/src:/usr/src/app/src
     networks:
       - app-network
     command: npm run dev
