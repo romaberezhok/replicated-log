@@ -1,8 +1,8 @@
-import { MessageStatus } from "./MessageStatus.jsx";
+import { MessageStatus } from './MessageStatus.jsx';
 
 export function MessagesHistory({ messagesHistory }) {
     return (
-        <ul>
+        <div className="toast-container position-absolute  top-0 end-0 p-3">
             {
                 messagesHistory.map((message) => {
                     return (
@@ -13,6 +13,6 @@ export function MessagesHistory({ messagesHistory }) {
                     )
                 })
             }
-        </ul>
+        </div>
     )
 }

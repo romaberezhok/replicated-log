@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { MessageForm } from './MessageForm.jsx';
-import { MessagesHistory } from './MessagesHistory.jsx';
+import { MessageForm } from './components/MessageForm.jsx';
+import { MessagesHistory } from './components/MessagesHistory.jsx';
 
 export default function App() {
     const [messagesHistory, setMessagesHistory] = useState([]);
@@ -8,17 +8,17 @@ export default function App() {
     const addMessageToHistory = (message) => {
         setMessagesHistory(prevMessages => {
             return [
+                {id: crypto.randomUUID(), createdAt: Date.now(), message},
                 ...prevMessages,
-                {id: crypto.randomUUID(), message},
             ]
         })
     }
 
     return (
-        <>
+        <div className="container">
             <MessageForm addMessageToHistory={addMessageToHistory} />
             <MessagesHistory messagesHistory={messagesHistory} />
-        </>
+        </div>
     )
 }
 
