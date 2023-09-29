@@ -1,0 +1,60 @@
+services:
+  client:
+    build:
+      context: client
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./client/src:/usr/src/app/src
+    networks:
+      - app-network
+    command: npm run dev
+    depends_on:
+      - master-server
+      - secondary-server
+
+  master-server:
+    build:
+      context: server
+    environment:
+      - NODE_TYPE=MASTER
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./server:/usr/src/app
+    networks:
+      - app-network
+    command: /usr/src/app/node_modules/.bin/nodemon -L app.js
+    depends_on:
+      - service-discovery
+
+  secondary-server:
+    build:
+      context: server
+    deploy:
+      mode: replicated
+      replicas: 2
+    environment:
+      - NODE_TYPE=SECONDARY
+    ports:
+      - "3001-3002:3000"
+    volumes:
+      - ./server:/usr/src/app
+    networks:
+      - app-network
+    command: node app.js
+
+  service-discovery:
+    image: traefik:v2.10
+    command: --api.insecure=true --providers.docker
+    ports:
+      - "8080:8080"
+    volumes:
+      # So that Traefik can listen to the Docker events
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
