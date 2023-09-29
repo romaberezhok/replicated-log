@@ -75,15 +75,17 @@ This will start the Master server and a specified number of Secondary servers (y
 
     - Initially, every message is in a "Pending" state and is denoted by a gray rectangle within the toast itself.
 
-   ![Pending Message](img_3.png)
+   ![img_3](https://github.com/romaberezhok/replicated-log/assets/50613629/a777b5ea-9ade-4935-9b4a-a78cbef33acb)
 
     - After the message has been successfully replicated to all Secondary nodes, the rectangle will turn green, and a corresponding status message will be displayed.
 
-   ![Successfully Replicated](img_2.png)
+   ![img_2](https://github.com/romaberezhok/replicated-log/assets/50613629/8b57c48d-85df-4121-b9da-48e5c108d7c6)
+
 
     - In the event of a failure to replicate the message, the rectangle will turn red, accompanied by an error message.
 
-   ![Replication Error](img_4.png)
+   ![img_4](https://github.com/romaberezhok/replicated-log/assets/50613629/dbff1b50-3d7e-444b-947c-3eea44db995a)
+
 
 4. To emulate a scenario where responses are received after the message is replicated on every Secondary server, follow these steps:
 
@@ -95,7 +97,8 @@ This will start the Master server and a specified number of Secondary servers (y
 
     2. Send a few messages. You will notice that there are several toasts, all displaying a "Pending" state as the result.
 
-       ![Pending Messages](img_5.png)
+       ![img_5](https://github.com/romaberezhok/replicated-log/assets/50613629/4f6bd355-cfa8-45da-b201-d5364e2af00c)
+
 
     3. Unpause the previously paused container:
 
@@ -105,7 +108,7 @@ This will start the Master server and a specified number of Secondary servers (y
 
     4. Observe that all messages are now marked as green.
 
-       ![Successfully Replicated](img_6.png)
+       ![img_6](https://github.com/romaberezhok/replicated-log/assets/50613629/d6fdac02-c57e-48f5-9039-e27360fd4e76)
 
 ### HTTP Requests
 
