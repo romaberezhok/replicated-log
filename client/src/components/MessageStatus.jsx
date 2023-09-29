@@ -39,6 +39,3 @@ export function MessageStatus({ id, createdAt, message }) {
         </div>
     )
 }
-
-
-
