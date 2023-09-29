@@ -1,4 +1,18 @@
 services:
+  client:
+    build:
+      context: client
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./client/src:/usr/src/app/src
+    networks:
+      - app-network
+    command: npm run dev
+    depends_on:
+      - master-server
+      - secondary-server
+
   master-server:
     build:
       context: server
@@ -11,6 +25,8 @@ services:
     networks:
       - app-network
     command: /usr/src/app/node_modules/.bin/nodemon -L app.js
+    depends_on:
+      - service-discovery
 
   secondary-server:
     build:
