@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
-export function MessageStatus({ id, createdAt, message }) {
+export function MessageStatus({ id, createdAt, message, writeConcern }) {
     const [status, setStatus] = useState('pending');
     const [statusText, setStatusText] = useState('Pending...');
     const statusToColorMapping = {
@@ -11,7 +11,7 @@ export function MessageStatus({ id, createdAt, message }) {
     };
 
     useEffect(() => {
-        axios.post('http://localhost:3000/api/messages', { message })
+        axios.post('http://localhost:3000/api/messages', { message, writeConcern })
             .then(({ data, status }) => {
                 setStatus(status === 201 ? 'success' : 'fail');
                 setStatusText(data.status);

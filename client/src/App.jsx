@@ -5,10 +5,10 @@ import { MessagesHistory } from './components/MessagesHistory.jsx';
 export default function App() {
     const [messagesHistory, setMessagesHistory] = useState([]);
 
-    const addMessageToHistory = (message) => {
+    const addMessageToHistory = (message, writeConcern) => {
         setMessagesHistory(prevMessages => {
             return [
-                {id: crypto.randomUUID(), createdAt: Date.now(), message},
+                {id: crypto.randomUUID(), createdAt: Date.now(), message, writeConcern},
                 ...prevMessages,
             ]
         })
