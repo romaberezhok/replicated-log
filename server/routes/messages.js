@@ -1,5 +1,5 @@
 const express = require('express');
-const { addMessage, listMessages } = require(`../controllers/${process.env.NODE_TYPE.toLowerCase()}/messages`);
+const { addMessage, listMessages } = require(`../controllers/messages`);
 
 const router = express.Router();
 

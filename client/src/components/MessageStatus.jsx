@@ -5,13 +5,13 @@ export function MessageStatus({ id, createdAt, message, writeConcern }) {
     const [status, setStatus] = useState('pending');
     const [statusText, setStatusText] = useState('Pending...');
     const statusToColorMapping = {
-        'pending': '#AAAAAA',
-        'success': '#4BB543',
-        'fail': '#FC100D',
+        pending: '#AAAAAA',
+        success: '#4BB543',
+        fail: '#FC100D',
     };
 
     useEffect(() => {
-        axios.post('http://localhost:3000/api/messages', { message, writeConcern })
+        axios.post('http://localhost:3000/api/messages', { createdAt, message, writeConcern })
             .then(({ data, status }) => {
                 setStatus(status === 201 ? 'success' : 'fail');
                 setStatusText(data.status);
