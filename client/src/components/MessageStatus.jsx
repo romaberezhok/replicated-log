@@ -16,10 +16,9 @@ export function MessageStatus({ id, createdAt, message, writeConcern }) {
                 setStatus(status === 201 ? 'success' : 'fail');
                 setStatusText(data.status);
             })
-            .catch(({ message }) => {
+            .catch(({ response, message }) => {
                 setStatus('fail');
-                setStatusText(`Failed to add message due to the following error: "${message}"`);
-                console.error(message);
+                setStatusText(response?.data.status || message);
             });
     }, []);
 
