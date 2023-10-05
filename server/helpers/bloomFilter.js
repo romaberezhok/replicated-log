@@ -1,3 +1,4 @@
+const crypto = require('crypto');
 class BloomFilter {
     constructor(size, numHashFunctions) {
         this.size = size;
@@ -23,11 +24,10 @@ class BloomFilter {
     }
 
     hash(message, seed) {
-        let hash = 0;
-        for (let i = 0; i < message.length; i++) {
-            hash += message.charCodeAt(i);
-        }
-        return (hash + seed) % this.size;
+        const hash = crypto.createHash('sha256');
+        hash.update(message + seed.toString());
+        const digest = hash.digest('hex');
+        return parseInt(digest, 16) % this.size;
     }
 }
 
