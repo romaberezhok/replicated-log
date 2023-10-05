@@ -9,11 +9,11 @@ const getSecondaryNodesURLs = async () => {
     }
 }
 
-const replicateMessage = async (url, message) => {
+const replicateMessage = async (url, data) => {
     try {
-        return await axios.post(`${url}/api/messages`, {'message': message});
+        return await axios.post(`${url}/api/messages`, data);
     } catch (error) {
-        throw new Error(`Failed to replicate "${message}" message to ${url}.`)
+        throw new Error(`Failed to replicate "${data.message}" message to ${url}.`)
     }
 }
 
