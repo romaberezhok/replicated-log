@@ -34,8 +34,13 @@ const pluralizeWord = (singularWord, pluralWord, count) => {
     return count > 1 ? pluralWord : singularWord;
 }
 
+const getRandomNumber = (min, max) => {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 module.exports = {
     getSecondaryNodesURLs,
     insertIntoSortedArray,
-    pluralizeWord
+    pluralizeWord,
+    getRandomNumber
 }

@@ -24,7 +24,7 @@ const replicateMessageToSecondaryNodes = async (res, data, writeConcern) => {
             const response = await replicateMessage(url, data);
             successfulResponses.push(response);
 
-            if (successfulResponses.length >= writeConcern - 1) {
+            if (writeConcern !== 1 && successfulResponses.length + 1 >= writeConcern) {
                 res.status(StatusCodes.CREATED).json({
                     message: data.message,
                     status: `Message "${data.message}" has been replicated to at least ${writeConcern} ${pluralizeWord('node', 'nodes', writeConcern)}.`
