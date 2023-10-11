@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { NodesMessagesTable } from './components/NodesMessagesTable.jsx';
 import { MessageForm } from './components/MessageForm.jsx';
 import { MessagesHistory } from './components/MessagesHistory.jsx';
 
@@ -18,6 +19,7 @@ export default function App() {
         <div className="container">
             <MessageForm addMessageToHistory={addMessageToHistory} />
             <MessagesHistory messagesHistory={messagesHistory} />
+            <NodesMessagesTable />
         </div>
     )
 }
