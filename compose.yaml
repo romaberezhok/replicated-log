@@ -3,12 +3,11 @@ services:
     build:
       context: client
     ports:
-      - "8000:8000"
-    volumes:
-      - ./client/src:/usr/src/app/src
+      - "8000:80"
+#    volumes:
+#      - ./client/src:/usr/src/app/src
     networks:
       - app-network
-    command: npm run dev
     depends_on:
       - master-server
       - secondary-server
@@ -20,8 +19,8 @@ services:
       - NODE_TYPE=MASTER
     ports:
       - "3000:3000"
-    volumes:
-      - ./server:/usr/src/app
+#    volumes:
+#      - ./server:/usr/src/app
     networks:
       - app-network
     command: /usr/src/app/node_modules/.bin/nodemon -L app.js
@@ -38,8 +37,8 @@ services:
       - NODE_TYPE=SECONDARY
     ports:
       - "3001-3002:3000"
-    volumes:
-      - ./server:/usr/src/app
+#    volumes:
+#      - ./server:/usr/src/app
     networks:
       - app-network
     command: node app.js
