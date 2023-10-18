@@ -6,8 +6,8 @@ export function MessageStatus({ id, createdAt, message, writeConcern }) {
     const [statusText, setStatusText] = useState('Pending...');
     const statusToColorMapping = {
         pending: '#AAAAAA',
-        success: '#4BB543',
-        fail: '#FC100D',
+        success: '#90ff90',
+        fail: '#FF2D00'
     };
 
     useEffect(() => {

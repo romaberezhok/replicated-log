@@ -37,7 +37,7 @@ export function NodesMessagesTable() {
 
     return (
         <div className="container d-flex flex-column justify-content-center align-items-center my-4">
-            <table className="table table-hover">
+            <table className="table table-hover w-100">
                 <thead className="table-light">
                     <tr>
                         <th scope="col" className="text-center text-uppercase">#</th>

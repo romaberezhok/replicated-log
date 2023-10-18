@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 export function MessageForm({ addMessageToHistory }) {
     const [message, setMessage] = useState('');
-    const [writeConcern, setWriteConcern] = useState(1);
+    const [writeConcern, setWriteConcern] = useState(3);
 
     const handleSubmit = (e) => {
         e.preventDefault();

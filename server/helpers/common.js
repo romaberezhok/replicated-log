@@ -38,7 +38,18 @@ const getRandomNumber = (min, max) => {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+const extractIPFromURL = (url) => {
+    const ipRegex = /(http[s]?:\/\/)?((\d{1,3}\.){3}\d{1,3})/i;
+
+    const match = url.match(ipRegex);
+
+    if (match && match[2]) {
+        return match[2];
+    }
+}
+
 module.exports = {
+    extractIPFromURL,
     getSecondaryNodesURLs,
     insertIntoSortedArray,
     pluralizeWord,

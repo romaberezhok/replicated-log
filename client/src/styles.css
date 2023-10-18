@@ -1,8 +1,9 @@
 .message-form {
-    background-color: #fdd835;
+    background-color: #3186b2;
     height: 55vh;
 }
 
 .btn {
-    background-color: #304ffe;
+    background-color: #0f52ba;
+    border: #0f52ba;
 }

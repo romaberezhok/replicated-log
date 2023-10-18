@@ -1,6 +1,11 @@
 const axios = require('axios');
 const { StatusCodes } = require('http-status-codes');
-const { getSecondaryNodesURLs, insertIntoSortedArray, pluralizeWord } = require('./common');
+const {
+    extractIPFromURL,
+    getSecondaryNodesURLs,
+    insertIntoSortedArray,
+    pluralizeWord
+} = require('./common');
 
 const insertMessageIntoHistory = (messages_history, data) => {
     if (process.env.NODE_TYPE === 'MASTER') {
@@ -72,7 +77,7 @@ const listMessagesFromSecondaryNodes = async () => {
     const response = {};
 
     for (let i = 0; i < secondaryNodesURLs.length; i++) {
-        response[secondaryNodesURLs[i]] = messages[i];
+        response[extractIPFromURL(secondaryNodesURLs[i])] = messages[i];
     }
 
     return response;
