@@ -3,14 +3,35 @@ const { StatusCodes } = require('http-status-codes');
 const { getSecondaryNodesURLs, insertIntoSortedArray, pluralizeWord } = require('./common');
 
 const insertMessageIntoHistory = (messages_history, data) => {
-    insertIntoSortedArray(messages_history, data, 'createdAt');
+    if (process.env.NODE_TYPE === 'MASTER') {
+        messages_history.push(data);
+        return;
+    }
+
+    const { requestId } = data;
+    const processedRequestIds = messages_history.map((message) => message.requestId);
+
+    if (!requestId || processedRequestIds.includes(requestId)) {
+        throw new Error(`Message ${data.message} with requestId ${requestId} has already been processed.`);
+    }
+
+    insertIntoSortedArray(messages_history, data, 'requestId');
 };
 
 const replicateMessage = async (url, data) => {
     try {
         return await axios.post(`${url}/api/messages`, data);
     } catch (error) {
-        throw new Error(`Failed to replicate "${data.message}" message to ${url}.`)
+        throw new Error(`Failed to replicate "${data.message}" message to ${url}.`);
+    }
+}
+
+const listMessages = async (url) => {
+    try {
+        const { data } = await axios.get(`${url}/api/messages`);
+        return data.messages;
+    } catch (error) {
+        throw new Error(`Failed to list messages from ${url}.`);
     }
 }
 
@@ -45,7 +66,26 @@ const replicateMessageToSecondaryNodes = async (res, data, writeConcern) => {
     }
 };
 
+const listMessagesFromSecondaryNodes = async ()
+
+const waitAllMessagesArrived = async (messages_history) => {
+    const checkInterval = 1000;
+    const maxRequestId = Math.max(...messages_history.map((message)  => message.requestId));
+
+    return new Promise((resolve) => {
+        const checkNoMissedMessages = async () => {
+            if (maxRequestId === messages_history.length) {
+                resolve(messages_history);
+            } else {
+                setTimeout(checkNoMissedMessages, checkInterval);
+            }
+        };
+        checkNoMissedMessages();
+    });
+};
+
 module.exports = {
     insertMessageIntoHistory,
-    replicateMessageToSecondaryNodes
+    replicateMessageToSecondaryNodes,
+    waitAllMessagesArrived
 };
