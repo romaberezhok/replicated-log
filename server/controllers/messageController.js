@@ -1,5 +1,9 @@
 const { StatusCodes } = require('http-status-codes');
-const { insertMessageIntoHistory, replicateMessageToSecondaryNodes , waitAllMessagesArrived} = require('../helpers/messageHelpers');
+const {
+    insertMessageIntoHistory, listMessagesFromSecondaryNodes,
+    replicateMessageToSecondaryNodes ,
+    waitAllMessagesArrived
+} = require('../helpers/messageHelpers');
 const { getRandomNumber } = require('../helpers/common');
 const { MESSAGES_HISTORY } = require('../db/db');
 
@@ -50,11 +54,16 @@ const listMessagesFromAllNodes = async (req, res) => {
         return res.status(StatusCodes.NOT_FOUND).json({status: 'The requested URL was not found on this server.'})
     }
 
+    const messagesFromAllNodes = {
+        master: MESSAGES_HISTORY.map((message) => message.message),
+        ... await listMessagesFromSecondaryNodes()
+    }
 
-
+    return res.status(StatusCodes.OK).json(messagesFromAllNodes);
 }
 
 module.exports = {
     addMessage,
-    listMessages
+    listMessages,
+    listMessagesFromAllNodes
 }

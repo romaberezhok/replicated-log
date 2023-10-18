@@ -66,11 +66,21 @@ const replicateMessageToSecondaryNodes = async (res, data, writeConcern) => {
     }
 };
 
-const listMessagesFromSecondaryNodes = async ()
+const listMessagesFromSecondaryNodes = async () => {
+    const secondaryNodesURLs = await getSecondaryNodesURLs();
+    const messages = await Promise.all(secondaryNodesURLs.map((url) => listMessages(url)))
+    const response = {};
+
+    for (let i = 0; i < secondaryNodesURLs.length; i++) {
+        response[secondaryNodesURLs[i]] = messages[i];
+    }
+
+    return response;
+};
 
 const waitAllMessagesArrived = async (messages_history) => {
     const checkInterval = 1000;
-    const maxRequestId = Math.max(...messages_history.map((message)  => message.requestId));
+    const maxRequestId = Math.max(...messages_history.map((message)  => message.requestId), 0);
 
     return new Promise((resolve) => {
         const checkNoMissedMessages = async () => {
@@ -86,6 +96,7 @@ const waitAllMessagesArrived = async (messages_history) => {
 
 module.exports = {
     insertMessageIntoHistory,
+    listMessagesFromSecondaryNodes,
     replicateMessageToSecondaryNodes,
     waitAllMessagesArrived
 };
