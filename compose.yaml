@@ -20,8 +20,8 @@ services:
       - NODE_TYPE=MASTER
     ports:
       - "3000:3000"
-    volumes:
-      - ./server:/usr/src/app
+#    volumes:
+#      - ./server:/usr/src/app
     networks:
       - app-network
     command: /usr/src/app/node_modules/.bin/nodemon -L app.js
@@ -40,8 +40,8 @@ services:
       - MAX_RESPONSE_DELAY=7
     ports:
       - "3001-3002:3000"
-    volumes:
-      - ./server:/usr/src/app
+#    volumes:
+#      - ./server:/usr/src/app
     networks:
       - app-network
     command: node app.js

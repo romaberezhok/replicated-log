@@ -16,10 +16,10 @@ export default function App() {
     }
 
     return (
-        <div className="container">
+        <>
             <MessageForm addMessageToHistory={addMessageToHistory} />
             <MessagesHistory messagesHistory={messagesHistory} />
             <NodesMessagesTable />
-        </div>
+        </>
     )
 }
