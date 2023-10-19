@@ -20,7 +20,6 @@ const addMessage = async (req, res) => {
 };
 
 const handleMasterFlow = async (res, message, writeConcern) => {
-
     insertMessageIntoHistory(MESSAGES_HISTORY, { message });
 
     if (writeConcern === 1) {
