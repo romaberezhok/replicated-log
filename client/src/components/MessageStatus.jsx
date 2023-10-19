@@ -1,25 +1,24 @@
-import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useEffect, useState } from 'react';
 
-export function MessageStatus({ id, createdAt, message }) {
+export function MessageStatus({ id, createdAt, message, writeConcern }) {
     const [status, setStatus] = useState('pending');
     const [statusText, setStatusText] = useState('Pending...');
     const statusToColorMapping = {
-        'pending': '#AAAAAA',
-        'success': '#4BB543',
-        'fail': '#FC100D',
+        pending: '#AAAAAA',
+        success: '#90ff90',
+        fail: '#FF2D00'
     };
 
     useEffect(() => {
-        axios.post('http://localhost:3000/api/messages', { message })
+        axios.post('http://localhost:3000/api/messages', { message, writeConcern })
             .then(({ data, status }) => {
                 setStatus(status === 201 ? 'success' : 'fail');
                 setStatusText(data.status);
             })
-            .catch(({ message }) => {
+            .catch(({ response, message }) => {
                 setStatus('fail');
-                setStatusText(`Failed to add message due to the following error: "${message}"`);
-                console.error(message);
+                setStatusText(response?.data.status || message);
             });
     }, []);
 

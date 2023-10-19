@@ -1,11 +1,9 @@
-#root {
-    background-color: #fdd835;
+.message-form {
+    background-color: #3186b2;
+    height: 55vh;
 }
 
-.input-btn {
-    background-color: #304ffe;
-}
-
-.input-form {
-    height: 80vh;
+.btn {
+    background-color: #0f52ba;
+    border: #0f52ba;
 }
