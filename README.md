@@ -88,24 +88,31 @@ This will start the Master server and a specified number of Secondary servers (y
 1. To test the system using the Web Client, open any web browser and enter [http://localhost:8000](http://localhost:8000) into the address bar. This action will bring up a page featuring the input fields.
 
 2. You can now input any message into the provided field and either press the `Submit` button or simply hit `Enter`.  By default, the `writeConcern` parameter is set to 3, but you can easily adjust it if needed.
-![img_7.png](img_7.png)
+   
+    ![image](https://github.com/romaberezhok/replicated-log/assets/50613629/a656c2d8-8464-458f-916d-c30ef3fc0951)
 
-3. Upon submission, a new notification, or "toast," will appear in the top-right corner of the page, indicating the result of your request.
+
+4. Upon submission, a new notification, or "toast," will appear in the top-right corner of the page, indicating the result of your request.
 
     - Initially, every message is in a "Pending" state and is denoted by a gray rectangle within the toast itself.
 
-   ![img_8.png](img_8.png)
+       ![image](https://github.com/romaberezhok/replicated-log/assets/50613629/fb477eae-c7d1-4ac8-a9a3-6b698d3f2eb0)
+
 
     - After the message has been successfully replicated to the specified number of Secondary nodes, the rectangle will turn green, and a corresponding status message will be displayed.
 
-   ![img_9.png](img_9.png)
+       ![image](https://github.com/romaberezhok/replicated-log/assets/50613629/c238ae34-fc17-4b4e-8d95-5d06c2c4a2c1)
+
 
     - In the event of a failure to replicate the message or if the `writeConcern` parameter exceeds the number of nodes in the cluster, the interface will indicate this by changing the status indicator to red and displaying an associated error message.
 
-   ![img_10.png](img_10.png)
+       ![image](https://github.com/romaberezhok/replicated-log/assets/50613629/8b68a4e5-15d1-47ad-a4f8-80f7e36f4d26)
 
 
-4. The interface features a table where you can monitor the messages across all nodes within the cluster. Due to the inherent response delay of secondary nodes (also can be adjusted in [compose.yaml](./compose.yaml)), messages will appear sequentially in the table. This allows you to confirm that the notification rectangle will transition to a green status only after the message has been successfully replicated to the specified number of nodes.
-![img_11.png](img_11.png)
+
+5. The interface features a table where you can monitor the messages across all nodes within the cluster. Due to the inherent response delay of secondary nodes (also can be adjusted in [compose.yaml](./compose.yaml)), messages will appear sequentially in the table. This allows you to confirm that the notification rectangle will transition to a green status only after the message has been successfully replicated to the specified number of nodes.
+   
+    ![image](https://github.com/romaberezhok/replicated-log/assets/50613629/46fc6f17-4cc0-4e71-9e6e-08c69cbfa576)
+
 
     
