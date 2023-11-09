@@ -2,10 +2,11 @@ const axios = require('axios');
 const { StatusCodes } = require('http-status-codes');
 const {
     extractIPFromURL,
-    getSecondaryNodesURLs,
     insertIntoSortedArray,
     pluralizeWord
 } = require('./common');
+
+const { SECONDARY_NODES_URLS } = require('../db/db')
 
 const insertMessageIntoHistory = (messages_history, data) => {
     if (process.env.NODE_TYPE === 'MASTER') {
@@ -41,11 +42,10 @@ const listMessages = async (url) => {
 }
 
 const replicateMessageToSecondaryNodes = async (res, data, writeConcern) => {
-    const secondaryNodesURLs = await getSecondaryNodesURLs();
     const successfulResponses = [];
     const failedResponses = [];
 
-    const promises = secondaryNodesURLs.map(async (url) => {
+    const promises = SECONDARY_NODES_URLS.map(async (url) => {
         try {
             const response = await replicateMessage(url, data);
             successfulResponses.push(response);
@@ -72,12 +72,11 @@ const replicateMessageToSecondaryNodes = async (res, data, writeConcern) => {
 };
 
 const listMessagesFromSecondaryNodes = async () => {
-    const secondaryNodesURLs = await getSecondaryNodesURLs();
-    const messages = await Promise.all(secondaryNodesURLs.map((url) => listMessages(url)))
+    const messages = await Promise.all(SECONDARY_NODES_URLS.map((url) => listMessages(url)))
     const response = {};
 
-    for (let i = 0; i < secondaryNodesURLs.length; i++) {
-        response[extractIPFromURL(secondaryNodesURLs[i])] = messages[i];
+    for (let i = 0; i < SECONDARY_NODES_URLS.length; i++) {
+        response[extractIPFromURL(SECONDARY_NODES_URLS[i])] = messages[i];
     }
 
     return response;

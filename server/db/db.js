@@ -1,5 +1,7 @@
 const MESSAGES_HISTORY = [];
+const SECONDARY_NODES_URLS = []
 
 module.exports = {
-    MESSAGES_HISTORY
+    MESSAGES_HISTORY,
+    SECONDARY_NODES_URLS
 };

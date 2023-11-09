@@ -1,7 +1,8 @@
 const { StatusCodes } = require('http-status-codes');
 const {
-    insertMessageIntoHistory, listMessagesFromSecondaryNodes,
-    replicateMessageToSecondaryNodes ,
+    insertMessageIntoHistory,
+    listMessagesFromSecondaryNodes,
+    replicateMessageToSecondaryNodes,
     waitAllMessagesArrived
 } = require('../helpers/messageHelpers');
 const { getRandomNumber } = require('../helpers/common');

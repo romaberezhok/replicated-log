@@ -10,10 +10,9 @@ services:
       - app-network
     command: npm run dev
     depends_on:
-      - master-server
-      - secondary-server
+      - master
 
-  master-server:
+  master:
     build:
       context: server
     environment:
@@ -25,10 +24,8 @@ services:
     networks:
       - app-network
     command: /usr/src/app/node_modules/.bin/nodemon -L app.js
-    depends_on:
-      - service-discovery
 
-  secondary-server:
+  secondary:
     build:
       context: server
     deploy:
@@ -45,17 +42,8 @@ services:
     networks:
       - app-network
     command: node app.js
-
-  service-discovery:
-    image: traefik:v2.10
-    command: --api.insecure=true --providers.docker
-    ports:
-      - "8080:8080"
-    volumes:
-      # So that Traefik can listen to the Docker events
-      - /var/run/docker.sock:/var/run/docker.sock
-    networks:
-      - app-network
+    depends_on:
+      - master
 
 networks:
   app-network:
