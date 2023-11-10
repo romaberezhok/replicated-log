@@ -6,22 +6,22 @@ const {
     pluralizeWord
 } = require('./common');
 
-const { SECONDARY_NODES_URLS } = require('../db/db')
+const { MESSAGES_HISTORY, SECONDARY_NODES_URLS } = require('../db/db');
 
-const insertMessageIntoHistory = (messages_history, data) => {
+const insertMessageIntoHistory = (messagesHistory, data) => {
     if (process.env.NODE_TYPE === 'MASTER') {
-        messages_history.push(data);
+        messagesHistory.push(data);
         return;
     }
 
     const { requestId } = data;
-    const processedRequestIds = messages_history.map((message) => message.requestId);
+    const processedRequestIds = messagesHistory.map((message) => message.requestId);
 
     if (!requestId || processedRequestIds.includes(requestId)) {
         throw new Error(`Message ${data.message} with requestId ${requestId} has already been processed.`);
     }
 
-    insertIntoSortedArray(messages_history, data, 'requestId');
+    insertIntoSortedArray(messagesHistory, data, 'requestId');
 };
 
 const replicateMessage = async (url, data) => {
@@ -82,14 +82,14 @@ const listMessagesFromSecondaryNodes = async () => {
     return response;
 };
 
-const waitAllMessagesArrived = async (messages_history) => {
+const waitAllMessagesArrived = async (messagesHistory) => {
     const checkInterval = 1000;
-    const maxRequestId = Math.max(...messages_history.map((message)  => message.requestId), 0);
+    const maxRequestId = Math.max(...messagesHistory.map((message)  => message.requestId), 0);
 
     return new Promise((resolve) => {
         const checkNoMissedMessages = async () => {
-            if (maxRequestId === messages_history.length) {
-                resolve(messages_history);
+            if (maxRequestId === messagesHistory.length) {
+                resolve(messagesHistory);
             } else {
                 setTimeout(checkNoMissedMessages, checkInterval);
             }
@@ -98,9 +98,25 @@ const waitAllMessagesArrived = async (messages_history) => {
     });
 };
 
+const syncMessagesHistoryFromMaster = async () => {
+    try {
+        const { data } = await axios.get('http://master:3000/api/messages');
+
+        MESSAGES_HISTORY.push(
+            ...data.messages.map((message, index) => ({message, requestId: index + 1}))
+        );
+
+        console.log('Messages have been synchronized from the master node:', MESSAGES_HISTORY);
+    } catch ({ response, message }) {
+            console.error('Error synchronizing data from the master:', response?.data || message);
+            throw new Error('Failed to synchronize history from the master node.');
+    }
+};
+
 module.exports = {
     insertMessageIntoHistory,
     listMessagesFromSecondaryNodes,
     replicateMessageToSecondaryNodes,
+    syncMessagesHistoryFromMaster,
     waitAllMessagesArrived
 };
