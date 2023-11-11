@@ -20,8 +20,7 @@ app.listen(port, async () => {
     console.log(`App is running on port ${port}.`);
 
     if (process.env.NODE_TYPE !== 'MASTER') {
-        await sendRegisterRequest();
         await syncMessagesHistoryFromMaster();
+        await sendRegisterRequest();
     }
-
 });

@@ -6,7 +6,7 @@ const {
     pluralizeWord
 } = require('./common');
 
-const { MESSAGES_HISTORY, SECONDARY_NODES_URLS } = require('../db/db');
+const { MESSAGES_HISTORY, SECONDARY_NODES_URLS, DEFICIENT_PROMISES_RESOLVERS} = require('../db/db');
 
 const insertMessageIntoHistory = (messagesHistory, data) => {
     if (process.env.NODE_TYPE === 'MASTER') {
@@ -22,7 +22,7 @@ const insertMessageIntoHistory = (messagesHistory, data) => {
     }
 
     insertIntoSortedArray(messagesHistory, data, 'requestId');
-};
+}
 
 const replicateMessage = async (url, data) => {
     try {
@@ -44,6 +44,8 @@ const listMessages = async (url) => {
 const replicateMessageToSecondaryNodes = async (res, data, writeConcern) => {
     const successfulResponses = [];
     const failedResponses = [];
+    const nodesDeficiency = writeConcern - (SECONDARY_NODES_URLS.length + 1);
+    const deficientPromises = [];
 
     const promises = SECONDARY_NODES_URLS.map(async (url) => {
         try {
@@ -61,15 +63,30 @@ const replicateMessageToSecondaryNodes = async (res, data, writeConcern) => {
         }
     });
 
-    await Promise.all(promises);
+    if (nodesDeficiency > 0) {
+        for (let i = 0; i < nodesDeficiency; i++) {
+            let resolver;
+            let promise = new Promise((resolve) => {
+                resolver = resolve;
+            });
 
-    if (successfulResponses.length + 1 < writeConcern) {
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+            deficientPromises.push(promise);
+            DEFICIENT_PROMISES_RESOLVERS.push({
+                writeConcern,
+                resolver
+            });
+        }
+    }
+
+    await Promise.all([...promises, ...deficientPromises]);
+
+    if (deficientPromises.length) {
+        res.status(StatusCodes.CREATED).json({
             message: data.message,
-            status: `Message "${data.message}" has been replicated only to ${successfulResponses.length + 1} ${pluralizeWord('node', 'nodes', successfulResponses.length + 1)}, but ${writeConcern} expected.`
+            status: `Message "${data.message}" has been replicated to at least ${writeConcern} ${pluralizeWord('node', 'nodes', writeConcern)}.`
         });
     }
-};
+}
 
 const listMessagesFromSecondaryNodes = async () => {
     const messages = await Promise.all(SECONDARY_NODES_URLS.map((url) => listMessages(url)))
@@ -80,7 +97,7 @@ const listMessagesFromSecondaryNodes = async () => {
     }
 
     return response;
-};
+}
 
 const waitAllMessagesArrived = async (messagesHistory) => {
     const checkInterval = 1000;
@@ -96,7 +113,7 @@ const waitAllMessagesArrived = async (messagesHistory) => {
         };
         checkNoMissedMessages();
     });
-};
+}
 
 const syncMessagesHistoryFromMaster = async () => {
     try {
@@ -108,15 +125,25 @@ const syncMessagesHistoryFromMaster = async () => {
 
         console.log('Messages have been synchronized from the master node:', MESSAGES_HISTORY);
     } catch ({ response, message }) {
-            console.error('Error synchronizing data from the master:', response?.data || message);
-            throw new Error('Failed to synchronize history from the master node.');
+        console.error('Error synchronizing data from the master:', response?.data || message);
+        throw new Error('Failed to synchronize history from the master node.');
     }
-};
+}
+
+const resolveDeficientPromises = () => {
+    DEFICIENT_PROMISES_RESOLVERS.forEach((resolver) => {
+        if (resolver.writeConcern === SECONDARY_NODES_URLS.length + 1) {
+            resolver.resolver();
+        }
+    })
+}
 
 module.exports = {
     insertMessageIntoHistory,
     listMessagesFromSecondaryNodes,
     replicateMessageToSecondaryNodes,
+    resolveDeficientPromises,
     syncMessagesHistoryFromMaster,
     waitAllMessagesArrived
-};
+}
+
